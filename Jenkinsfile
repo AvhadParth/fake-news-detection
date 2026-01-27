@@ -22,18 +22,19 @@ pipeline {
             }
         }
 
-        stage('Trivy Security Scan') {
-            steps {
-                script {
-                    sh '''
-                    trivy image \
-                      --severity HIGH,CRITICAL \
-                      --exit-code 1 \
-                      factmatrix-streamlit
-                    '''
-                }
-            }
+       stage('Trivy Security Scan') {
+    steps {
+        script {
+            sh '''
+            /opt/homebrew/bin/trivy image \
+              --severity HIGH,CRITICAL \
+              --exit-code 1 \
+              factmatrix-streamlit
+            '''
         }
+    }
+}
+
     }
 
     post {
