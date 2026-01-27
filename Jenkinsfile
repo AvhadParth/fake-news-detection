@@ -13,7 +13,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t factmatrix-streamlit .'
+                    sh '/usr/local/bin/docker build -t factmatrix-streamlit .'
                 }
             }
         }
