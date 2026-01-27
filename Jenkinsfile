@@ -31,7 +31,7 @@ pipeline {
                 pip install --upgrade pip
                 pip install -r requirements.txt pytest coverage
 
-                coverage run -m pytest
+                coverage run -m pytest tests
                 coverage xml
                 """
             }
