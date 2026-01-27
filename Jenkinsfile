@@ -21,14 +21,27 @@ pipeline {
                 }
             }
         }
+
+        stage('Trivy Security Scan') {
+            steps {
+                script {
+                    sh '''
+                    trivy image \
+                      --severity HIGH,CRITICAL \
+                      --exit-code 1 \
+                      factmatrix-streamlit
+                    '''
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo '✅ CI pipeline completed successfully'
+            echo '✅ CI + Security pipeline completed successfully'
         }
         failure {
-            echo '❌ CI pipeline failed'
+            echo '❌ Pipeline failed due to security or build issues'
         }
     }
 }
