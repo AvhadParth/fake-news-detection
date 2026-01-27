@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_CONFIG = "${env.HOME}/.jenkins-docker"
+    }
+
     stages {
 
         stage('Checkout Code') {
