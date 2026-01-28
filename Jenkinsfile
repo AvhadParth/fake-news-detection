@@ -52,12 +52,14 @@ pipeline {
 
 
         stage('Trivy Security Scan') {
-            steps {
-                sh '''
-                ${TRIVY_PATH} image --severity CRITICAL --exit-code 1 factmatrix-streamlit
-                '''
-            }
-        }
+    steps {
+        sh """
+        export TRIVY_DISABLE_DOCKER_CREDENTIALS=true
+        ${TRIVY_PATH} image --severity CRITICAL --exit-code 1 factmatrix-ci-factmatrix
+        """
+    }
+}
+
     }
 
     post {
