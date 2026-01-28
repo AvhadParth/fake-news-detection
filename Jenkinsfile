@@ -41,13 +41,15 @@ pipeline {
         }
 
         stage('Build & Deploy with Docker Compose') {
-            steps {
-                sh '''
-                ${DOCKER_PATH} compose down || true
-                ${DOCKER_PATH} compose up -d --build
-                '''
-            }
-        }
+    steps {
+        sh """
+        ${DOCKER_PATH} compose down --remove-orphans || true
+        ${DOCKER_PATH} rm -f factmatrix-app || true
+        ${DOCKER_PATH} compose up -d --build
+        """
+    }
+}
+
 
         stage('Trivy Security Scan') {
             steps {
