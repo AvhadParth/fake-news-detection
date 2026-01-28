@@ -15,50 +15,52 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                sh """
-                ${DOCKER_PATH} build -t factmatrix-streamlit .
-                """
-            }
-        }
-
         stage('Run Tests & Generate Coverage') {
             steps {
-                sh """
+                sh '''
                 python3 -m venv .venv
                 source .venv/bin/activate
+
                 pip install --upgrade pip
                 pip install -r requirements.txt pytest coverage
 
                 coverage run -m pytest tests
                 coverage xml
-                """
+                '''
             }
         }
 
         stage('Upload Coverage to Codacy') {
             steps {
-                sh """
+                sh '''
                 curl -Ls https://coverage.codacy.com/get.sh | bash -s report \
                   --language Python \
                   --coverage-reports coverage.xml
-                """
+                '''
+            }
+        }
+
+        stage('Build & Deploy with Docker Compose') {
+            steps {
+                sh '''
+                ${DOCKER_PATH} compose down || true
+                ${DOCKER_PATH} compose up -d --build
+                '''
             }
         }
 
         stage('Trivy Security Scan') {
             steps {
-                sh """
+                sh '''
                 ${TRIVY_PATH} image --severity CRITICAL --exit-code 1 factmatrix-streamlit
-                """
+                '''
             }
         }
     }
 
     post {
         success {
-            echo "✅ CI + Coverage + Security pipeline completed successfully"
+            echo "✅ CI/CD + Coverage + Security + Auto Deployment SUCCESSFUL"
         }
         failure {
             echo "❌ Pipeline failed"

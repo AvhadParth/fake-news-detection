@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  factmatrix:
+    build: .
+    container_name: factmatrix-app
+    ports:
+      - "8501:8501"
+    restart: always
