@@ -4,3 +4,4 @@ models/*.joblib
 .env
 _pycache_/
 *.pyc
+.DS_Store
