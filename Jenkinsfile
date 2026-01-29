@@ -3,9 +3,8 @@ pipeline {
 
     environment {
         CODACY_PROJECT_TOKEN = credentials('codacy-token')
+        DOCKER = "/usr/local/bin/docker"
         TRIVY_DISABLE_DB_UPDATE = "true"
-        TRIVY_SKIP_DB_UPDATE = "true"
-        TRIVY_NON_SSL = "true"
     }
 
     stages {
@@ -42,7 +41,7 @@ pipeline {
         stage('Clean Old Containers (Safe)') {
             steps {
                 sh '''
-                docker compose down --remove-orphans || true
+                $DOCKER compose down --remove-orphans || true
                 '''
             }
         }
@@ -50,7 +49,7 @@ pipeline {
         stage('Build & Deploy with Docker Compose') {
             steps {
                 sh '''
-                docker compose up -d --build
+                $DOCKER compose up -d --build
                 '''
             }
         }
@@ -70,9 +69,9 @@ pipeline {
         stage('Monitoring Check') {
             steps {
                 sh '''
-                docker ps | grep factmatrix-app
-                docker ps | grep factmatrix-prometheus
-                docker ps | grep factmatrix-grafana
+                $DOCKER ps | grep factmatrix-app
+                $DOCKER ps | grep factmatrix-prometheus
+                $DOCKER ps | grep factmatrix-grafana
                 '''
             }
         }
