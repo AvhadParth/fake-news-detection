@@ -2,19 +2,17 @@ services:
   factmatrix-app:
     build: .
     image: factmatrix-ci-factmatrix-app
-    ports:
-      - "8501:8501"
     networks:
       - factmatrix-net
 
   prometheus:
     image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
     volumes:
       - ./monitoring:/etc/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
     networks:
       - factmatrix-net
 
