@@ -1,33 +1,30 @@
-version: "3.9"
-
 services:
   factmatrix:
     build: .
+    container_name: factmatrix-app
     ports:
       - "8501:8501"
-    restart: always
-    depends_on:
-      - prometheus
     networks:
       - factmatrix-net
+    restart: always
 
   prometheus:
     image: prom/prometheus
-    ports:
-      - "9090:9090"
+    container_name: factmatrix-prometheus
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-    restart: always
     networks:
       - factmatrix-net
+    restart: always
+    # ❌ NO ports exposed (important)
 
   grafana:
     image: grafana/grafana
-    ports:
-      - "3000:3000"
-    restart: always
+    container_name: factmatrix-grafana
     networks:
       - factmatrix-net
+    restart: always
+    # ❌ NO ports exposed (important)
 
 networks:
   factmatrix-net:
