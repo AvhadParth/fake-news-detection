@@ -2,8 +2,8 @@ services:
   factmatrix:
     build: .
     container_name: factmatrix-app
-    ports:
-      - "8501:8501"
+    expose:
+      - "8501"           # 👈 internal only
     networks:
       - factmatrix-net
     restart: always
@@ -16,7 +16,6 @@ services:
     networks:
       - factmatrix-net
     restart: always
-    # ❌ NO ports exposed (important)
 
   grafana:
     image: grafana/grafana
@@ -24,7 +23,6 @@ services:
     networks:
       - factmatrix-net
     restart: always
-    # ❌ NO ports exposed (important)
 
 networks:
   factmatrix-net:
