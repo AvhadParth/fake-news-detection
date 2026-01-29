@@ -69,20 +69,22 @@ pipeline {
         stage('Monitoring Check') {
     steps {
         sh '''
+        DOCKER=/usr/local/bin/docker
+
         echo "Waiting for containers to stabilize..."
         sleep 10
 
         echo "Checking FactMatrix app container..."
-        docker ps --format "{{.Names}}" | grep -q factmatrix-app || {
+        $DOCKER ps --format "{{.Names}}" | grep -q factmatrix-app || {
             echo "❌ FactMatrix app container not running"
-            docker ps
+            $DOCKER ps
             exit 1
         }
 
         echo "Checking Prometheus container..."
-        docker ps --format "{{.Names}}" | grep -q prometheus || {
+        $DOCKER ps --format "{{.Names}}" | grep -q prometheus || {
             echo "❌ Prometheus container not running"
-            docker ps
+            $DOCKER ps
             exit 1
         }
 
@@ -90,6 +92,7 @@ pipeline {
         '''
     }
 }
+
 
     }
 
