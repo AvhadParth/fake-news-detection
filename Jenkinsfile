@@ -4,7 +4,7 @@ pipeline {
     environment {
         CODACY_PROJECT_TOKEN = credentials('codacy-token')
         DOCKER = "/usr/local/bin/docker"
-        TRIVY_DISABLE_DB_UPDATE = "true"
+        TRIVY  = "/opt/homebrew/bin/trivy"
     }
 
     stages {
@@ -57,7 +57,7 @@ pipeline {
         stage('Trivy Security Scan') {
             steps {
                 sh '''
-                trivy image \
+                $TRIVY image \
                   --skip-db-update \
                   --severity CRITICAL \
                   --exit-code 0 \
@@ -79,7 +79,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ CI/CD Pipeline completed successfully'
+            echo '✅ CI/CD + Security + Monitoring completed successfully'
         }
         failure {
             echo '❌ Pipeline failed'
