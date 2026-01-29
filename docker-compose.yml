@@ -1,28 +1,41 @@
+version: "3.8"
+
 services:
-  factmatrix:
+  factmatrix-app:
     build: .
     container_name: factmatrix-app
-    expose:
-      - "8501"           # 👈 internal only
+    ports:
+      - "8501:8501"
     networks:
       - factmatrix-net
-    restart: always
 
   prometheus:
     image: prom/prometheus
     container_name: factmatrix-prometheus
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
     networks:
       - factmatrix-net
-    restart: always
 
   grafana:
     image: grafana/grafana
     container_name: factmatrix-grafana
+    ports:
+      - "3000:3000"
     networks:
       - factmatrix-net
-    restart: always
+    depends_on:
+      - prometheus
+
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - factmatrix-net
 
 networks:
   factmatrix-net:
