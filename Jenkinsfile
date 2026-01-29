@@ -67,14 +67,30 @@ pipeline {
         }
 
         stage('Monitoring Check') {
-            steps {
-                sh '''
-                $DOCKER ps | grep factmatrix-app
-                $DOCKER ps | grep factmatrix-prometheus
-                $DOCKER ps | grep factmatrix-grafana
-                '''
-            }
+    steps {
+        sh '''
+        echo "Waiting for containers to stabilize..."
+        sleep 10
+
+        echo "Checking FactMatrix app container..."
+        docker ps --format "{{.Names}}" | grep -q factmatrix-app || {
+            echo "❌ FactMatrix app container not running"
+            docker ps
+            exit 1
         }
+
+        echo "Checking Prometheus container..."
+        docker ps --format "{{.Names}}" | grep -q prometheus || {
+            echo "❌ Prometheus container not running"
+            docker ps
+            exit 1
+        }
+
+        echo "✅ Monitoring services are up and running"
+        '''
+    }
+}
+
     }
 
     post {
