@@ -65,6 +65,15 @@ pipeline {
     }
 }
 
+stage('Monitoring Check') {
+    steps {
+        sh '''
+        docker ps | grep prometheus
+        docker ps | grep grafana
+        '''
+    }
+}
+
 
     }
 
