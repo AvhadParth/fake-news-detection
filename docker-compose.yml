@@ -1,39 +1,34 @@
-version: "3.8"
-
 services:
   factmatrix-app:
     build: .
-    container_name: factmatrix-app
+    image: factmatrix-ci-factmatrix-app
     ports:
       - "8501:8501"
     networks:
       - factmatrix-net
 
   prometheus:
-    image: prom/prometheus
-    container_name: factmatrix-prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    image: prom/prometheus:latest
     ports:
       - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - factmatrix-net
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
     networks:
       - factmatrix-net
 
   grafana:
-    image: grafana/grafana
-    container_name: factmatrix-grafana
+    image: grafana/grafana:latest
     ports:
       - "3000:3000"
-    networks:
-      - factmatrix-net
     depends_on:
       - prometheus
-
-  node-exporter:
-    image: prom/node-exporter
-    container_name: node-exporter
-    ports:
-      - "9100:9100"
     networks:
       - factmatrix-net
 
